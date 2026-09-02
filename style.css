@@ -1,1 +1,91 @@
+* {
+  box-sizing: border-box;
+}
 
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background: #f5f5f5;
+  color: #222;
+}
+
+.quiz-container {
+  width: min(700px, 92%);
+  margin: 40px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+#progress {
+  text-align: right;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+#question {
+  font-size: 1.3rem;
+  line-height: 1.6;
+}
+
+.choice {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin: 12px 0;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.choice:hover {
+  background: #f0f0f0;
+}
+
+.choice.correct {
+  border-color: #222;
+  background: #eee;
+}
+
+.choice.wrong {
+  border-color: #999;
+  background: #ddd;
+}
+
+.choice:disabled {
+  cursor: default;
+}
+
+#result {
+  margin-top: 20px;
+  line-height: 1.7;
+}
+
+#nextButton,
+#restartButton {
+  margin-top: 20px;
+  padding: 13px 25px;
+  border: none;
+  border-radius: 10px;
+  background: #222;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+#scoreScreen {
+  text-align: center;
+}
