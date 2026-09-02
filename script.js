@@ -905,3 +905,35 @@ function selectAnswer(selectedIndex, clickedButton) {
 
   nextButton.classList.remove("hidden");
 }
+nextButton.addEventListener("click", () => {
+  currentQuestion++;
+
+  if (currentQuestion < questions.length) {
+    showQuestion();
+  } else {
+    showScore();
+  }
+});
+
+function showScore() {
+  quiz.classList.add("hidden");
+  scoreScreen.classList.remove("hidden");
+
+  const percentage =
+    Math.round((score / questions.length) * 100);
+
+  scoreText.textContent =
+    `${questions.length}問中 ${score}問正解！ ${percentage}点`;
+}
+
+restartButton.addEventListener("click", () => {
+  currentQuestion = 0;
+  score = 0;
+
+  quiz.classList.remove("hidden");
+  scoreScreen.classList.add("hidden");
+
+  showQuestion();
+});
+
+showQuestion();
