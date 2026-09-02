@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI基礎テスト</title>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .question {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 30px 0 20px;
+    }
+
+    .choice {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    .choice:hover {
+      background: #f0f0f0;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>AI基礎テスト</h1>
+
+    <div id="questionNumber"></div>
+
+    <div id="question" class="question"></div>
+
+    <div id="choices"></div>
+
+    <div id="result"></div>
+
+  </div>
+
+  <script>
+    const question = {
+      number: 1,
+      text: "AIとは何でしょう？",
+      choices: [
+        "A. 人間の知的な活動の一部をコンピューターで実現する技術",
+        "B. インターネット上の情報をすべて保存する技術",
+        "C. コンピューターを人間の代わりにする技術",
+        "D. ロボットだけを動かすための技術"
+      ],
+      answer: 0
+    };
+
+    document.getElementById("questionNumber").textContent =
+      "第" + question.number + "問";
+
+    document.getElementById("question").textContent =
+      question.text;
+
+    const choicesElement = document.getElementById("choices");
+
+    question.choices.forEach((choice, index) => {
+      const button = document.createElement("button");
+
+      button.textContent = choice;
+      button.className = "choice";
+
+      button.onclick = function() {
+        if (index === question.answer) {
+          document.getElementById("result").textContent =
+            "正解！🎉";
+        } else {
+          document.getElementById("result").textContent =
+            "不正解！";
+        }
+      };
+
+      choicesElement.appendChild(button);
+    });
+  </script>
+
+</body>
+</html>
