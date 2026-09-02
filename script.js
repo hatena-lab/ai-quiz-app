@@ -854,21 +854,24 @@ function showQuestion() {
     }))
     .sort(() => Math.random() - 0.5);
 
-  shuffledChoices.forEach(item => {
+  shuffledChoices.forEach((item, displayIndex) => {
     const button = document.createElement("button");
 
-    button.textContent = item.choice;
+    button.textContent =
+      `${String.fromCharCode(65 + displayIndex)}. ${item.choice}`;
+
     button.className = "choice";
+    button.dataset.originalIndex = item.originalIndex;
 
     button.addEventListener("click", () => {
-      selectAnswer(item.originalIndex);
+      selectAnswer(item.originalIndex, button);
     });
 
     choices.appendChild(button);
   });
 }
 
-function selectAnswer(selectedIndex) {
+function selectAnswer(selectedIndex, clickedButton) {
   const q = questions[currentQuestion];
   const buttons = document.querySelectorAll(".choice");
 
@@ -876,54 +879,29 @@ function selectAnswer(selectedIndex) {
     button.disabled = true;
   });
 
+  // 正解の選択肢が、画面上の何番目にあるか調べる
+  const correctButton = Array.from(buttons).find(
+    button => Number(button.dataset.originalIndex) === q.answer
+  );
+
+  const correctDisplayIndex =
+    Array.from(buttons).indexOf(correctButton);
+
   if (selectedIndex === q.answer) {
     score++;
-    buttons[selectedIndex].classList.add("correct");
+    clickedButton.classList.add("correct");
 
     result.innerHTML =
       `<strong>正解！</strong><br>${q.explanation}`;
   } else {
-    buttons[selectedIndex].classList.add("wrong");
-    buttons[q.answer].classList.add("correct");
+    clickedButton.classList.add("wrong");
+    correctButton.classList.add("correct");
 
     result.innerHTML =
       `<strong>不正解！</strong><br>` +
-      `正解は「${String.fromCharCode(65 + q.answer)}」です。<br>` +
+      `正解は「${String.fromCharCode(65 + correctDisplayIndex)}」です。<br>` +
       `${q.explanation}`;
   }
 
   nextButton.classList.remove("hidden");
 }
-
-nextButton.addEventListener("click", () => {
-  currentQuestion++;
-
-  if (currentQuestion < questions.length) {
-    showQuestion();
-  } else {
-    showScore();
-  }
-});
-
-function showScore() {
-  quiz.classList.add("hidden");
-  scoreScreen.classList.remove("hidden");
-
-  const percentage =
-    Math.round((score / questions.length) * 100);
-
-  scoreText.textContent =
-    `${questions.length}問中 ${score}問正解！ ${percentage}点`;
-}
-
-restartButton.addEventListener("click", () => {
-  currentQuestion = 0;
-  score = 0;
-
-  quiz.classList.remove("hidden");
-  scoreScreen.classList.add("hidden");
-
-  showQuestion();
-});
-
-showQuestion();
