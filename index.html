@@ -24,10 +24,16 @@
       text-align: center;
     }
 
+    #questionNumber {
+      margin-top: 25px;
+      color: #666;
+    }
+
     .question {
       font-size: 20px;
       font-weight: bold;
-      margin: 30px 0 20px;
+      line-height: 1.6;
+      margin: 15px 0 25px;
     }
 
     .choice {
@@ -47,9 +53,35 @@
       background: #f0f0f0;
     }
 
+    .choice:disabled {
+      cursor: default;
+    }
+
     #result {
-      margin-top: 20px;
+      margin-top: 25px;
+      font-size: 18px;
       font-weight: bold;
+    }
+
+    #explanation {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f7f7f7;
+      border-radius: 8px;
+      line-height: 1.7;
+      display: none;
+    }
+
+    #nextButton {
+      display: none;
+      margin-top: 20px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -68,47 +100,128 @@
 
     <div id="result"></div>
 
+    <div id="explanation"></div>
+
+    <button id="nextButton">次の問題</button>
+
   </div>
 
   <script>
-    const question = {
-      number: 1,
-      text: "AIとは何でしょう？",
-      choices: [
-        "A. 人間の知的な活動の一部をコンピューターで実現する技術",
-        "B. インターネット上の情報をすべて保存する技術",
-        "C. コンピューターを人間の代わりにする技術",
-        "D. ロボットだけを動かすための技術"
-      ],
-      answer: 0
-    };
+    const questions = [
+      {
+        number: 1,
+        text: "AIとは何でしょう？",
+        choices: [
+          "A. 人間の知的な活動の一部をコンピューターで実現する技術",
+          "B. インターネット上の情報をすべて保存する技術",
+          "C. コンピューターを人間の代わりにする技術",
+          "D. ロボットだけを動かすための技術"
+        ],
+        answer: 0,
+        explanation:
+          "AIとは、人間が行う知的な活動の一部をコンピューターで実現する技術です。画像認識、音声認識、文章の理解や生成など、さまざまな分野で利用されています。"
+      }
+    ];
 
-    document.getElementById("questionNumber").textContent =
-      "第" + question.number + "問";
+    let currentQuestion = 0;
 
-    document.getElementById("question").textContent =
-      question.text;
+    function showQuestion() {
+      const question = questions[currentQuestion];
 
-    const choicesElement = document.getElementById("choices");
+      document.getElementById("questionNumber").textContent =
+        "第" + question.number + "問";
 
-    question.choices.forEach((choice, index) => {
-      const button = document.createElement("button");
+      document.getElementById("question").textContent =
+        question.text;
 
-      button.textContent = choice;
-      button.className = "choice";
+      const choicesElement = document.getElementById("choices");
+      choicesElement.innerHTML = "";
 
-      button.onclick = function() {
-        if (index === question.answer) {
-          document.getElementById("result").textContent =
-            "正解！🎉";
+      document.getElementById("result").textContent = "";
+
+      const explanationElement =
+        document.getElementById("explanation");
+
+      explanationElement.style.display = "none";
+      explanationElement.textContent = "";
+
+      document.getElementById("nextButton").style.display = "none";
+
+      question.choices.forEach((choice, index) => {
+        const button = document.createElement("button");
+
+        button.textContent = choice;
+        button.className = "choice";
+
+        button.onclick = function() {
+          answerQuestion(index);
+        };
+
+        choicesElement.appendChild(button);
+      });
+    }
+
+    function answerQuestion(selectedAnswer) {
+      const question = questions[currentQuestion];
+
+      const buttons =
+        document.querySelectorAll(".choice");
+
+      buttons.forEach(button => {
+        button.disabled = true;
+      });
+
+      const resultElement =
+        document.getElementById("result");
+
+      if (selectedAnswer === question.answer) {
+        resultElement.textContent = "正解！🎉";
+      } else {
+        resultElement.textContent =
+          "不正解！ 正解は " +
+          question.choices[question.answer] +
+          " です。";
+      }
+
+      const explanationElement =
+        document.getElementById("explanation");
+
+      explanationElement.textContent =
+        "【解説】\n" + question.explanation;
+
+      explanationElement.style.display = "block";
+
+      document.getElementById("nextButton").style.display =
+        "inline-block";
+    }
+
+    document.getElementById("nextButton").onclick =
+      function() {
+
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          showQuestion();
         } else {
+          document.getElementById("questionNumber").textContent =
+            "";
+
+          document.getElementById("question").textContent =
+            "テスト終了！";
+
+          document.getElementById("choices").innerHTML = "";
+
           document.getElementById("result").textContent =
-            "不正解！";
+            "お疲れさまでした＾＾";
+
+          document.getElementById("explanation").style.display =
+            "none";
+
+          document.getElementById("nextButton").style.display =
+            "none";
         }
       };
 
-      choicesElement.appendChild(button);
-    });
+    showQuestion();
   </script>
 
 </body>
