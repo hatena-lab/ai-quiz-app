@@ -845,16 +845,22 @@ function showQuestion() {
   result.innerHTML = "";
   nextButton.classList.add("hidden");
 
-  q.choices.forEach((choice, index) => {
+  // 選択肢をランダムに並べ替える
+  const shuffledChoices = q.choices
+    .map((choice, index) => ({
+      choice: choice,
+      originalIndex: index
+    }))
+    .sort(() => Math.random() - 0.5);
+
+  shuffledChoices.forEach(item => {
     const button = document.createElement("button");
 
-    button.textContent =
-      `${String.fromCharCode(65 + index)}. ${choice}`;
-
+    button.textContent = item.choice;
     button.className = "choice";
 
     button.addEventListener("click", () => {
-      selectAnswer(index);
+      selectAnswer(item.originalIndex);
     });
 
     choices.appendChild(button);
